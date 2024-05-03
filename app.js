@@ -18,6 +18,53 @@ function fetchMovies() {
         .then(data => displayMovies(data.results, 'movie-container'))
         .catch(error => console.error('Error fetching data:', error));
 }
+function displayMovieDetails(movieId) {
+    const movieDetailsUrl = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=fr-FR&append_to_response=videos`;
+    fetch(movieDetailsUrl)
+        .then(response => response.json())
+        .then(data => {
+            const detailsContainer = document.getElementById('details-container');
+            detailsContainer.innerHTML = ''; // Clear existing content
+            
+            // Bouton de retour
+            const backButton = document.createElement('button');
+            backButton.textContent = 'Retour';
+            backButton.onclick = () => {
+                detailsContainer.style.display = 'none';
+                document.getElementById('movie-container').style.display = 'block';
+            };
+            detailsContainer.appendChild(backButton);
+
+            const title = document.createElement('h2');
+            title.textContent = data.title;
+            detailsContainer.appendChild(title);
+
+            const releaseDate = document.createElement('p');
+            releaseDate.textContent = `Date de sortie: ${data.release_date}`;
+            detailsContainer.appendChild(releaseDate);
+
+            const overview = document.createElement('p');
+            overview.textContent = data.overview;
+            detailsContainer.appendChild(overview);
+
+            const videoKey = data.videos.results[0]?.key;
+            if (videoKey) {
+                const trailer = document.createElement('iframe');
+                trailer.setAttribute('src', `https://www.youtube.com/embed/${videoKey}`);
+                trailer.setAttribute('width', '560');
+                trailer.setAttribute('height', '315');
+                trailer.setAttribute('frameborder', '0');
+                trailer.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+                trailer.setAttribute('allowfullscreen', true);
+                detailsContainer.appendChild(trailer);
+            }
+
+            detailsContainer.style.display = 'block';
+            document.getElementById('movie-container').style.display = 'none';
+            document.getElementById('favorites-container').style.display = 'none';
+        })
+        .catch(error => console.error('Error fetching movie details:', error));
+}
 
 function displayMovies(movies, containerId, isFavoriteView = false) {
     const container = document.getElementById(containerId);
@@ -58,6 +105,11 @@ function displayMovies(movies, containerId, isFavoriteView = false) {
             }
         });
         movieEl.appendChild(favButton);
+
+        const detailsButton = document.createElement('button');
+        detailsButton.textContent = 'Voir détails';
+        detailsButton.addEventListener('click', () => displayMovieDetails(movie.id));
+        movieEl.appendChild(detailsButton);
 
         container.appendChild(movieEl);
     });
