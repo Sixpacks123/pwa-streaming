@@ -6,34 +6,41 @@ const urlsToCache = [
     '/app.js'
 ];
 
-self.addEventListener('install', event => {
+self.addEventListener("install", (event) => {
+    console.log("[SW] Install");
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
+        caches.open(CACHE_NAME).then((cache) => {
+            console.log("[SW] Caching files");
+            return cache.addAll(urlsToCache);
+        }).catch(error => {
+            console.error("[SW] Failed to open cache", error);
+        })
     );
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener("activate", (event) => {
+    console.log("[SW] Activate");
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.filter(cache => cache !== CACHE_NAME)
+                    .map(cache => caches.delete(cache))
+            );
+        })
+    );
+});
+
+self.addEventListener("fetch", (event) => {
+    console.log("[SW] Fetching:", event.request.url);
     event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                if (response) {
-                    return response;  // Return the cached response
-                }
-                return fetch(event.request).then(newResponse => {
-                    if (!newResponse || newResponse.status !== 200 || newResponse.type !== 'basic') {
-                        return newResponse;
-                    }
-                    const responseToCache = newResponse.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseToCache);
-                        });
-                    return newResponse;
+        caches.match(event.request).then(response => {
+            return response || fetch(event.request).then(response => {
+                let responseClone = response.clone();
+                caches.open(CACHE_NAME).then(cache => {
+                    cache.put(event.request, responseClone);
                 });
-            })
+                return response;
+            });
+        })
     );
 });

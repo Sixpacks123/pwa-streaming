@@ -4,6 +4,20 @@ body {
     background-color: #f4f4f4;
 }
 
+#showFavorites {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+#favorites-container {
+    display: none; /* Initial state is hidden */
+}
+
 .movie {
     background: white;
     padding: 20px;
@@ -12,9 +26,10 @@ body {
 }
 
 .movie img {
-    width: 50%;
+    width: 100%;
     border-radius: 5px;
 }
+
 
 input#searchBox {
     margin: 20px 0;

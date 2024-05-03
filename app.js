@@ -1,9 +1,9 @@
 const API_KEY = '71f3cc9cefcffc5bca87e0d0d7e6286a';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const MOVIE_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=fr-FR`;
-
 document.addEventListener('DOMContentLoaded', () => {
     fetchMovies();
+    document.getElementById('showFavorites').addEventListener('click', showFavorites);
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
             .then(() => console.log('Service Worker Registered'))
@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function fetchMovies() {
     fetch(MOVIE_URL)
         .then(response => response.json())
-        .then(data => displayMovies(data.results))
+        .then(data => displayMovies(data.results, 'movie-container'))
         .catch(error => console.error('Error fetching data:', error));
 }
 
-function displayMovies(movies) {
-    const container = document.getElementById('movie-container');
+function displayMovies(movies, containerId) {
+    const container = document.getElementById(containerId);
     container.innerHTML = '';
     movies.forEach(movie => {
         const movieEl = document.createElement('div');
@@ -33,6 +33,18 @@ function displayMovies(movies) {
         `;
         container.appendChild(movieEl);
     });
+}
+
+function showFavorites() {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    displayMovies(favorites, 'favorites-container');
+    document.getElementById('favorites-container').style.display = 'block';
+    document.getElementById('movie-container').style.display = 'none';
+}
+
+function hideFavorites() {
+    document.getElementById('favorites-container').style.display = 'none';
+    document.getElementById('movie-container').style.display = 'block';
 }
 
 function toggleFavorite(movie) {
