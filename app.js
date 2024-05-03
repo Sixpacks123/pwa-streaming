@@ -145,7 +145,7 @@ function toggleFavorite(movie, isFavoriteView) {
     localStorage.setItem('favorites', JSON.stringify(favorites));
     alert(isFavoriteView ? 'Film enlevé des favoris' : 'Film ajouté aux favoris');
     // Refresh the view to update button text and list
-    displayMovies(isFavoriteView ? favorites : movies, isFavoriteView ? 'favorites-container' : 'movie-container', isFavoriteView);
+    displayMovies(isFavoriteView ? favorites : movie, isFavoriteView ? 'favorites-container' : 'movie-container', isFavoriteView);
 }
 
 
