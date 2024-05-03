@@ -31,7 +31,7 @@ function displayMovieDetails(movieId) {
             backButton.textContent = 'Retour';
             backButton.onclick = () => {
                 detailsContainer.style.display = 'none';
-                document.getElementById('movie-container').style.display = 'block';
+                document.getElementById('movie-container').style.display = 'grid';
             };
             detailsContainer.appendChild(backButton);
 
@@ -119,17 +119,17 @@ function displayMovies(movies, containerId, isFavoriteView = false) {
 function showFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     displayMovies(favorites, 'favorites-container');
-    document.getElementById('favorites-container').style.display = 'block';
+    document.getElementById('favorites-container').style.display = 'grid';
     document.getElementById('movie-container').style.display = 'none';
     document.getElementById('showFavorites').style.display = 'none';
-    document.getElementById('showAllMovies').style.display = 'inline';
+    document.getElementById('showAllMovies').style.display = 'grid';
 }
 
 function showAllMovies() {
     fetchMovies();
     document.getElementById('favorites-container').style.display = 'none';
-    document.getElementById('movie-container').style.display = 'block';
-    document.getElementById('showFavorites').style.display = 'inline';
+    document.getElementById('movie-container').style.display = 'grid';
+    document.getElementById('showFavorites').style.display = 'grid';
     document.getElementById('showAllMovies').style.display = 'none';
 }
 
