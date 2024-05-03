@@ -1,45 +1,49 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    padding: 20px;
+    font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
 }
 
-#showFavorites {
-    padding: 10px;
-    background-color: #007BFF;
+h1 {
+    color: #333;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px 5px 20px 0;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
-    margin: 10px 0;
     cursor: pointer;
 }
 
-#favorites-container {
-    display: none; /* Initial state is hidden */
+button:hover {
+    background-color: #0056b3;
+}
+
+#searchBox {
+    padding: 10px;
+    width: calc(100% - 22px);
+    margin-bottom: 20px;
 }
 
 .movie {
-    background: white;
-    padding: 20px;
-    margin: 10px 0;
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 10px;
     border-radius: 5px;
 }
 
 .movie img {
     width: 100%;
+    height: auto;
     border-radius: 5px;
 }
 
-
-input#searchBox {
-    margin: 20px 0;
-    padding: 10px;
-    width: 95%;
-    font-size: 16px;
-}
-
 #movie-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 20px;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+grid-gap: 20px;
 }
