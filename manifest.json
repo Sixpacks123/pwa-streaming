@@ -1,12 +1,13 @@
 {
     "name": "Video Streaming App",
     "short_name": "StreamApp",
-    "start_url": "/pwa-streaming",
+    "start_url": "/pwa-streaming/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#0d4c73",
     "orientation": "portrait",
     "description": "Stream your favorite movies and shows.",
+    "scope": "https://sixpacks123.github.io/pwa-streaming/",
     "icons": [
       {
         "src": "icons/icon-192x192.png",
