@@ -1,0 +1,23 @@
+{
+    "name": "Video Streaming App",
+    "short_name": "StreamApp",
+    "start_url": "/pwa-streaming",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#0d4c73",
+    "orientation": "portrait",
+    "description": "Stream your favorite movies and shows.",
+    "icons": [
+      {
+        "src": "icons/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "icons/icon-256x256.png",
+        "sizes": "256x256",
+        "type": "image/png"
+      }
+    ]
+  }
+  
