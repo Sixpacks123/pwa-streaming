@@ -1,10 +1,17 @@
 const API_KEY = '71f3cc9cefcffc5bca87e0d0d7e6286a';
 const BASE_URL = 'https://api.themoviedb.org/3';
-const MOVIE_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=fr-FR`;
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchMovies();
     document.getElementById('showFavorites').addEventListener('click', showFavorites);
     document.getElementById('showAllMovies').addEventListener('click', showAllMovies);
+    document.getElementById('searchBox').addEventListener('input', searchMovies);
+
+    const movieContainer = document.getElementById('movie-container');
+    const favoritesContainer = document.getElementById('favorites-container');
+    const showFavoritesButton = document.getElementById('showFavorites');
+    const showAllMoviesButton = document.getElementById('showAllMovies');
+
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
             .then(() => console.log('Service Worker Registered'))
@@ -13,11 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchMovies() {
+    const MOVIE_URL = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=fr-FR`;
     fetch(MOVIE_URL)
         .then(response => response.json())
         .then(data => displayMovies(data.results, 'movie-container'))
         .catch(error => console.error('Error fetching data:', error));
 }
+
 function displayMovieDetails(movieId) {
     const movieDetailsUrl = `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=fr-FR&append_to_response=videos`;
     fetch(movieDetailsUrl)
@@ -29,10 +38,10 @@ function displayMovieDetails(movieId) {
             // Bouton de retour
             const backButton = document.createElement('button');
             backButton.textContent = 'Retour';
-            backButton.onclick = () => {
+            backButton.addEventListener('click', () => {
                 detailsContainer.style.display = 'none';
                 document.getElementById('movie-container').style.display = 'grid';
-            };
+            });
             detailsContainer.appendChild(backButton);
 
             const title = document.createElement('h2');
@@ -93,7 +102,6 @@ function displayMovies(movies, containerId, isFavoriteView = false) {
         movieEl.appendChild(img);
 
         const favButton = document.createElement('button');
-        // Check if the movie is in favorites and update button text accordingly
         const isFavorited = favorites.some(fav => fav.id === movie.id);
         favButton.textContent = isFavorited ? 'Enlever des favoris' : 'Ajouter aux favoris';
         favButton.addEventListener('click', () => {
@@ -115,24 +123,22 @@ function displayMovies(movies, containerId, isFavoriteView = false) {
     });
 }
 
-
 function showFavorites() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     displayMovies(favorites, 'favorites-container');
-    document.getElementById('favorites-container').style.display = 'grid';
-    document.getElementById('movie-container').style.display = 'none';
-    document.getElementById('showFavorites').style.display = 'none';
-    document.getElementById('showAllMovies').style.display = 'grid';
+    favoritesContainer.style.display = 'grid';
+    movieContainer.style.display = 'none';
+    showFavoritesButton.style.display = 'none';
+    showAllMoviesButton.style.display = 'grid';
 }
 
 function showAllMovies() {
     fetchMovies();
-    document.getElementById('favorites-container').style.display = 'none';
-    document.getElementById('movie-container').style.display = 'grid';
-    document.getElementById('showFavorites').style.display = 'grid';
-    document.getElementById('showAllMovies').style.display = 'none';
+    favoritesContainer.style.display = 'none';
+    movieContainer.style.display = 'grid';
+    showFavoritesButton.style.display = 'grid';
+    showAllMoviesButton.style.display = 'none';
 }
-
 
 function toggleFavorite(movie, isFavoriteView) {
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -144,10 +150,8 @@ function toggleFavorite(movie, isFavoriteView) {
     }
     localStorage.setItem('favorites', JSON.stringify(favorites));
     alert(isFavoriteView ? 'Film enlevé des favoris' : 'Film ajouté aux favoris');
-    // Refresh the view to update button text and list
     displayMovies(isFavoriteView ? favorites : movie, isFavoriteView ? 'favorites-container' : 'movie-container', isFavoriteView);
 }
-
 
 function searchMovies(event) {
     const searchTerm = event.target.value.toLowerCase();
